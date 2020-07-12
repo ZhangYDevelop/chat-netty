@@ -21,6 +21,7 @@
  */
 package com.zy.chat.netty.sdk.model;
 
+
 import com.zy.chat.netty.sdk.constant.ChatConstant;
 
 import java.io.Serializable;

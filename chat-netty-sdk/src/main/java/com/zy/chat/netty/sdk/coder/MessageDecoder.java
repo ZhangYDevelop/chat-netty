@@ -29,7 +29,8 @@ public class MessageDecoder extends SimpleChannelInboundHandler<Object> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageDecoder.class);
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws InvalidProtocolBufferException {
+
         if (msg instanceof FullHttpRequest) {
             handleHandshakeRequest(ctx, (FullHttpRequest) msg);
         }

@@ -3,6 +3,7 @@ package com.zy.chat.netty.sdk.hanlder;
 import com.zy.chat.netty.sdk.coder.MessageDecoder;
 import com.zy.chat.netty.sdk.coder.MessageEncoder;
 import com.zy.chat.netty.sdk.constant.ChatConstant;
+import com.zy.chat.netty.sdk.model.HeartbeatRequest;
 import com.zy.chat.netty.sdk.model.HeartbeatResponse;
 import com.zy.chat.netty.sdk.model.MySession;
 import com.zy.chat.netty.sdk.model.SendBody;
@@ -14,7 +15,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,16 +100,12 @@ public class ChatNioSocketAcceptor {
                 ch.pipeline().addLast(new HttpObjectAggregator(65536));
                 ch.pipeline().addLast(new MessageEncoder());
                 ch.pipeline().addLast(new MessageDecoder());
+                ch.pipeline().addLast(new ChannelHandler[]{new LoggingHandler(LogLevel.INFO)});
                 ch.pipeline().addLast(channelEventHandler);
             }
         });
-        ChannelFuture channelFuture = null;
-        try {
-            channelFuture = bootstrap.bind(serverPort).sync();
-            channelFuture.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        ChannelFuture channelFuture  = bootstrap.bind(serverPort).syncUninterruptibly();
+
         channelFuture.channel().newSucceededFuture().addListener(future1 -> {
             String logBanner = "\n\n" +
                     "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n" +
@@ -169,6 +171,7 @@ public class ChatNioSocketAcceptor {
     @Sharable
     private class FinalChannelEventHandler extends SimpleChannelInboundHandler<Object> {
 
+
         /**
          * 该方法在有客户端连接的时候调用
          * @param channelHandlerContext
@@ -200,7 +203,7 @@ public class ChatNioSocketAcceptor {
             }
 
             /*
-             * 有业务层去处理其他的sentBody
+             * 业务层处理
              */
             outerRequestHandler.process(session, body);
 
@@ -220,6 +223,35 @@ public class ChatNioSocketAcceptor {
         @Override
         public void channelActive(ChannelHandlerContext ctx){
             channelGroup.put(ctx.channel().id().asShortText(),ctx.channel());
+        }
+
+
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt){
+
+            if (! (evt instanceof IdleStateEvent)){
+                return;
+            }
+
+            IdleStateEvent idleEvent = (IdleStateEvent) evt;
+
+            if (idleEvent.state().equals(IdleState.WRITER_IDLE)) {
+                ctx.channel().attr(AttributeKey.valueOf(ChatConstant.HEARTBEAT_KEY)).set(System.currentTimeMillis());
+                ctx.channel().writeAndFlush(HeartbeatRequest.getInstance());
+            }
+
+            /*
+             * 如果心跳请求发出30秒内没收到响应，则关闭连接
+             */
+            if (idleEvent.state().equals(IdleState.READER_IDLE)) {
+
+                Long lastTime = (Long) ctx.channel().attr(AttributeKey.valueOf(ChatConstant.HEARTBEAT_KEY)).get();
+                if (lastTime != null && System.currentTimeMillis() - lastTime >= PONG_TIME_OUT) {
+                    ctx.channel().close();
+                }
+
+                ctx.channel().attr(AttributeKey.valueOf(ChatConstant.HEARTBEAT_KEY)).set(null);
+            }
         }
     }
 }

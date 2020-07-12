@@ -1,6 +1,7 @@
 package com.zy.chat.netty.sdk.model;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.zy.chat.netty.sdk.constant.ChatConstant;
 import com.zy.chat.netty.sdk.model.proto.SessionProto;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
@@ -109,17 +110,24 @@ public class MySession  implements Serializable {
         this.nid = session.id().asShortText();
     }
 
+
     public MySession() {
 
+    }
+
+    public void setSession(Channel session) {
+        this.session = session;
     }
 
     public Long getId() {
         return id;
     }
 
+
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public String getAccount() {
         return account;
@@ -127,70 +135,8 @@ public class MySession  implements Serializable {
 
     public void setAccount(String account) {
         this.account = account;
-    }
 
-    public String getNid() {
-        return nid;
-    }
-
-    public void setNid(String nid) {
-        this.nid = nid;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getDeviceModel() {
-        return deviceModel;
-    }
-
-    public void setDeviceModel(String deviceModel) {
-        this.deviceModel = deviceModel;
-    }
-
-    public String getClientVersion() {
-        return clientVersion;
-    }
-
-    public void setClientVersion(String clientVersion) {
-        this.clientVersion = clientVersion;
-    }
-
-    public String getSystemVersion() {
-        return systemVersion;
-    }
-
-    public void setSystemVersion(String systemVersion) {
-        this.systemVersion = systemVersion;
-    }
-
-    public Long getBindTime() {
-        return bindTime;
-    }
-
-    public void setBindTime(Long bindTime) {
-        this.bindTime = bindTime;
+        setAttribute(ChatConstant.KEY_ACCOUNT, account);
     }
 
     public Double getLongitude() {
@@ -217,6 +163,70 @@ public class MySession  implements Serializable {
         this.location = location;
     }
 
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getDeviceModel() {
+        return deviceModel;
+    }
+
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public Long getBindTime() {
+        return bindTime;
+    }
+
+    public void setBindTime(Long bindTime) {
+        this.bindTime = bindTime;
+    }
+
+    public String getClientVersion() {
+        return clientVersion;
+    }
+
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
+    }
+
+    public String getSystemVersion() {
+        return systemVersion;
+    }
+
+    public void setSystemVersion(String systemVersion) {
+        this.systemVersion = systemVersion;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
     public int getApns() {
         return apns;
     }
@@ -232,6 +242,11 @@ public class MySession  implements Serializable {
     public void setState(int state) {
         this.state = state;
     }
+
+    public Channel getSession() {
+        return session;
+    }
+
 
     public void setAttribute(String key, Object value) {
         if (session != null) {

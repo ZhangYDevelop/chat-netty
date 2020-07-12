@@ -21,7 +21,6 @@
  */
 package com.zy.chat.netty.sdk.model;
 
-
 import com.zy.chat.netty.sdk.constant.ChatConstant;
 import com.zy.chat.netty.sdk.model.proto.ReplyBodyProto;
 
@@ -31,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 请求响应对象
+ * 请求应答对象
  *
  */
 public class ReplyBody implements Serializable, Transportable {
