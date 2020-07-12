@@ -21,7 +21,7 @@ import java.util.Objects;
 
 /*
  * 账号绑定实现
- * 
+ *
  */
 
 @Component
@@ -34,10 +34,10 @@ public class BindHandler implements RequestHandler {
 
 	@Value("${server.address}")
 	private String host;
-	
+
 	@Resource
 	private MessagePusher defaultMessagePusher;
-	
+
 	@Override
 	public void process(MySession newSession, SendBody body) {
 
@@ -45,7 +45,7 @@ public class BindHandler implements RequestHandler {
 		reply.setKey(body.getKey());
 		reply.setCode(HttpStatus.OK.value());
 		reply.setTimestamp(System.currentTimeMillis());
-		
+
 		try {
 
 			String account = body.get("account");
@@ -69,19 +69,19 @@ public class BindHandler implements RequestHandler {
 			if (oldSession != null && fromOtherDevice(newSession,oldSession) && oldSession.isConnected()) {
 				sendForceOfflineMessage(oldSession, account, newSession.getDeviceModel());
 			}
-			
+
 			/*
 			 * 有可能是同一个设备重复连接，则关闭旧的链接，这种情况一般是客户端断网，联网又重新链接上来，之前的旧链接没有来得及通过心跳机制关闭，在这里手动关闭
 			 * 条件1，连接来自是同一个设备
 			 * 条件2.2个连接都是同一台服务器
 			 */
-			
+
 			if (oldSession != null && !fromOtherDevice(newSession,oldSession) && Objects.equals(oldSession.getHost(),host)) {
 				closeQuietly(oldSession);
 			}
 
 			sessionService.save(newSession);
-			
+
 
 		} catch (Exception exception) {
 			reply.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -91,10 +91,10 @@ public class BindHandler implements RequestHandler {
 	}
 
 	private boolean fromOtherDevice(MySession oldSession ,MySession newSession) {
-			
+
 			return !Objects.equals(oldSession.getDeviceId(), newSession.getDeviceId());
 	}
-	 
+
 	private void sendForceOfflineMessage(MySession oldSession, String account, String deviceModel) {
 
 		Message msg = new Message();
@@ -103,9 +103,9 @@ public class BindHandler implements RequestHandler {
 		msg.setSender("system");
 		msg.setContent(deviceModel);
 		msg.setId(System.currentTimeMillis());
-		
+
 		defaultMessagePusher.push(msg);
-		
+
 		closeQuietly(oldSession);
 
 	}

@@ -44,6 +44,10 @@ public class SessionServiceImpl implements SessionService {
         respository.remove(accout);
     }
 
+    /**
+     * 查询在线用户
+     * @return
+     */
     @Override
     public List<MySession> list() {
         return respository.findAll();

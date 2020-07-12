@@ -35,7 +35,7 @@ import java.util.Objects;
 
 /*
  * 断开连接，清除session
- * 
+ *
  */
 
 @Component
@@ -43,7 +43,7 @@ public class SessionClosedHandler implements RequestHandler {
 
 	@Resource
 	private SessionService sessionService;
-	
+
 	@Override
 	public void process(MySession ios, SendBody message) {
 		Object quietly = ios.getAttribute(ChatConstant.KEY_QUIETLY_CLOSE);

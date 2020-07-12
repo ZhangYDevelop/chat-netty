@@ -5,7 +5,7 @@ import com.zy.chat.netty.sdk.model.MySession;
 import java.util.List;
 
 /**
- * 会话管理服务几口
+ * 会话管理服务接口
  */
 public interface SessionService {
 
