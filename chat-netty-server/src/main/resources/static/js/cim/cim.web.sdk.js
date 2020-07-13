@@ -23,7 +23,6 @@ let socket;
 let manualStop = false;
 const CIMPushManager = {};
 CIMPushManager.connect = function () {
-    debugger
     manualStop = false;
     window.localStorage.account = '';
     socket = new WebSocket(CIM_URI);
@@ -35,7 +34,6 @@ CIMPushManager.connect = function () {
 };
 
 CIMPushManager.bindAccount = function (account) {
-    debugger
     window.localStorage.account = account;
 
     let deviceId = window.localStorage.deviceIddeviceId;
@@ -70,7 +68,6 @@ CIMPushManager.resume = function () {
 
 
 CIMPushManager.innerOnConnectFinished = function () {
-    debugger
     let account = window.localStorage.account;
     if (account === '' || account === undefined) {
         onConnectFinished();
