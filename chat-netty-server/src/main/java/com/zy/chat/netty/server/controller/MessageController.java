@@ -24,7 +24,9 @@ package com.zy.chat.netty.server.controller;
 import com.zy.chat.netty.sdk.model.Message;
 import com.zy.chat.netty.server.push.MessagePusher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +42,7 @@ public class MessageController  {
 
 
 	@PostMapping(value = "/send")
-	public ResponseEntity<Long> send(Message message)  {
+	public ResponseEntity<Long> send(@RequestBody Message message)  {
 
 		message.setId(System.currentTimeMillis());
 
