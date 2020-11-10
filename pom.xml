@@ -32,6 +32,7 @@
     <modules>
         <module>chat-netty-sdk</module>
         <module>chat-netty-server</module>
+        <module>chat-netty-client</module>
     </modules>
 
     <dependencyManagement>

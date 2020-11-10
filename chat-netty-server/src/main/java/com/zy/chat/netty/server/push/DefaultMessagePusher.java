@@ -37,7 +37,7 @@ public class DefaultMessagePusher implements MessagePusher {
          * IOS设备，如果开启了apns，则使用apns推送
          */
         if (session.isIOSChannel() && session.isApnsEnable()) {
-            //apnsService.push(message, session.getDeviceId());
+//            apnsService.push(message, session.getDeviceId());
             return;
         }
 
