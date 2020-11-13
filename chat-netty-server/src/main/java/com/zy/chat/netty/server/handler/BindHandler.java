@@ -81,7 +81,7 @@ public class BindHandler implements RequestHandler {
 			}
 
 			sessionService.save(newSession);
-
+			sessionService.saveSessionGourp(newSession.getAccount(), newSession.getSession());
 
 		} catch (Exception exception) {
 			reply.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());

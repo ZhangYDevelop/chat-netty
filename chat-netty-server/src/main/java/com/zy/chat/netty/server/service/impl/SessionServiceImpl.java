@@ -1,8 +1,12 @@
 package com.zy.chat.netty.server.service.impl;
 
 import com.zy.chat.netty.sdk.model.MySession;
+import com.zy.chat.netty.server.dto.UserGroup;
 import com.zy.chat.netty.server.respository.SessionRespository;
 import com.zy.chat.netty.server.service.SessionService;
+import com.zy.chat.netty.server.service.UserGroupService;
+import io.netty.channel.Channel;
+import io.netty.channel.group.DefaultChannelGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +18,22 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     private SessionRespository respository;
 
+    @Autowired
+    private UserGroupService userGroupService;
+
+
+    @Override
+    public void saveSessionGourp(String account, Channel channel) {
+        List<UserGroup> groups = this.userGroupService.getUserGroupList(account);
+        for (UserGroup group : groups) {
+            this.respository.saveSessionGourp(group.getGroupCode(), channel);
+        }
+    }
+
+    @Override
+    public DefaultChannelGroup getSessionGroup(String groupCode) {
+        return this.respository.getSessionGroup(groupCode);
+    }
 
     /**
      * 根据账号获取会话
@@ -33,6 +53,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public void save(MySession newSession) {
         respository.save(newSession);
+
     }
 
     /**

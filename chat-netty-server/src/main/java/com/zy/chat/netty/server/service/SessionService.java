@@ -1,6 +1,8 @@
 package com.zy.chat.netty.server.service;
 
 import com.zy.chat.netty.sdk.model.MySession;
+import io.netty.channel.Channel;
+import io.netty.channel.group.DefaultChannelGroup;
 
 import java.util.List;
 
@@ -8,6 +10,19 @@ import java.util.List;
  * 会话管理服务接口
  */
 public interface SessionService {
+
+    /**
+     * 保存群ChannelGroup
+     * @param account
+     */
+    void saveSessionGourp(String account,Channel channel) ;
+
+    /**
+     * 根据群组名称获取ChannelGroup
+     * @param groupCode
+     * @return
+     */
+     DefaultChannelGroup getSessionGroup(String groupCode);
 
     /**
      * 根据账号获取会话
