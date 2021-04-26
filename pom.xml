@@ -24,7 +24,7 @@
         <netty.version>4.1.44.Final</netty.version>
         <slf4j.version>1.7.30</slf4j.version>
         <apns4j.verion>1.1.4</apns4j.verion>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <chat-netty-sdk.version>1.0-SNAPSHOT</chat-netty-sdk.version>
     </properties>
